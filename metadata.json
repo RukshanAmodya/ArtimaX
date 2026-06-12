@@ -1,0 +1,6 @@
+{
+  "name": "AuraArt",
+  "description": "Premium Pinterest-Style Art Discovery & Dual-Sided E-Commerce App featuring live auctions, AR preview limits, and immersive feeds.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
