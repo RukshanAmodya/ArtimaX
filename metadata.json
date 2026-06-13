@@ -1,6 +1,6 @@
 {
-  "name": "AuraArt",
-  "description": "Premium Pinterest-Style Art Discovery & Dual-Sided E-Commerce App featuring live auctions, AR preview limits, and immersive feeds.",
+  "name": "ArtimaX",
+  "description": "Premium Pinterest-Style Art & Products E-Commerce Marketplace featuring true asymmetric masonry discovery feed, dual-sided Buyer/Seller portals, and a Firebase/Supabase-driven realtime architecture.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

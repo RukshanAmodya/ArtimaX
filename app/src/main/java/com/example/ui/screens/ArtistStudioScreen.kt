@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.selection.SelectionContainer
 import coil.compose.AsyncImage
 import com.example.data.ArtMedium
 import com.example.data.CustomCommission
@@ -40,7 +41,7 @@ fun ArtistStudioScreen(
     val artist = MockArtData.artists[0] // Elianna Vance profile
     val commissions by viewModel.commissions.collectAsState()
 
-    var activeSubTab by remember { mutableStateOf("Studio Live") } // Studio Live | Commissions | Analytics | Bulk Importer
+    var activeSubTab by remember { mutableStateOf("Studio Live") } // Studio Live | Commissions | Analytics | Blueprints
     var csvText by remember { mutableStateOf("") }
     var importStatusMessage by remember { mutableStateOf("") }
 
@@ -137,8 +138,8 @@ fun ArtistStudioScreen(
             Tab(selected = activeSubTab == "Analytics", onClick = { activeSubTab = "Analytics" }) {
                 Text("Analytics", modifier = Modifier.padding(10.dp), fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
-            Tab(selected = activeSubTab == "Bulk Importer", onClick = { activeSubTab = "Bulk Importer" }) {
-                Text("Exporter", modifier = Modifier.padding(10.dp), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Tab(selected = activeSubTab == "Blueprints", onClick = { activeSubTab = "Blueprints" }) {
+                Text("Blueprints", modifier = Modifier.padding(10.dp), fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -411,55 +412,182 @@ fun ArtistStudioScreen(
                     }
                 }
 
-                "Bulk Importer" -> {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text("Secure Exporters & Bulk Mapping Utility", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                        Text("Paste CSV/JSON records to process active portfolios instantly.", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                "Blueprints" -> {
+                    var blueprintTab by remember { mutableStateOf("Architecture") } // Architecture | Schema | UI code | API code
+                    var uploadProgressStep by remember { mutableIntStateOf(0) }
+                    var progressStatusText by remember { mutableStateOf("Ready to simulate") }
 
-                        OutlinedTextField(
-                            value = csvText,
-                            onValueChange = { csvText = it },
-                            placeholder = { Text("Title,Artist,Medium,PriceUsd,ImageUrl\nAmber Neon,Elianna Vance,OIL_ON_CANVAS,950,https://...", fontSize = 11.sp) },
-                            modifier = Modifier.fillMaxWidth().height(100.dp),
-                            shape = RoundedCornerShape(10.dp)
-                        )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text("Enterprise Blueprint & Sync Engine", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.primary)
+                        Text("Decoupled Multi-Platform Media & State pipeline reference.", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
-                        Button(
-                            onClick = {
-                                val count = viewModel.simulateBulkCSVImport(csvText)
-                                importStatusMessage = "Successfully imported $count new artworks into the active Pinterest feed!"
-                                csvText = ""
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(imageVector = Icons.Default.Upload, contentDescription = "Import csv")
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Process CSV Metadata mapping")
-                        }
-
-                        if (importStatusMessage.isNotEmpty()) {
-                            Text(text = importStatusMessage, fontSize = 11.sp, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                        }
-
-                        Divider()
-
-                        // Secure Expiring Download delivery vault (Feature 43)
+                        // Progress simulation timeline
                         Card(
                             modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
                         ) {
-                            Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text("Secure Watermarked Digital Vault", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Text("Interactive Ingestion Simulator", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Column {
-                                        Text("License Agreement: Watermark Active", fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                                        Text("Expiring secure token: active 48 hours.", fontSize = 9.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text("Step ${uploadProgressStep}/3: $progressStatusText", fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                    if (uploadProgressStep < 3) {
+                                        Button(
+                                            onClick = {
+                                                uploadProgressStep++
+                                                progressStatusText = when (uploadProgressStep) {
+                                                    1 -> "Uploading uncropped file raw bytes to Supabase storage bucket 'art-images-bucket'..."
+                                                    2 -> "Resolved public URL: https://roqcztwhwonmfwbhwkuk.supabase.co/storage/v1/object/public/art-images-bucket/..."
+                                                    3 -> "Synchronized Firebase real-time JSON node at path '/artworks/id_992' successfully!"
+                                                    else -> "Upload complete"
+                                                }
+                                            },
+                                            shape = RoundedCornerShape(8.dp),
+                                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                                        ) {
+                                            Text("Next Step", fontSize = 10.sp)
+                                        }
+                                    } else {
+                                        TextButton(onClick = {
+                                            uploadProgressStep = 0
+                                            progressStatusText = "Simulation reset"
+                                        }) {
+                                            Text("Reset", fontSize = 10.sp)
+                                        }
                                     }
-                                    Icon(imageVector = Icons.Default.LockClock, contentDescription = "Secure Token")
+                                }
+
+                                LinearProgressIndicator(
+                                    progress = uploadProgressStep / 3f,
+                                    modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp))
+                                )
+                            }
+                        }
+
+                        // Code selection buttons
+                        ScrollableTabRow(
+                            selectedTabIndex = when (blueprintTab) {
+                                "Architecture" -> 0
+                                "Schema" -> 1
+                                "UI code" -> 2
+                                else -> 3
+                            },
+                            edgePadding = 0.dp,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            listOf("Architecture", "Schema", "UI code", "API code").forEach { t ->
+                                Tab(
+                                    selected = blueprintTab == t,
+                                    onClick = { blueprintTab = t },
+                                    text = { Text(t, fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+                                )
+                            }
+                        }
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(12.dp)
+                            ) {
+                                when (blueprintTab) {
+                                    "Architecture" -> {
+                                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                            Text("Data Synchronization Flow", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = MaterialTheme.colorScheme.primary)
+                                            Text("1. Client uploads raw binary image payload to Supabase Bucket Storage.\n" +
+                                                    "2. Supabase server processes upload, registers visual asset, and returns secure public image URL.\n" +
+                                                    "3. Android client writes artwork object metadata (including resolved public image URL) directly to Firebase Realtime Database.\n" +
+                                                    "4. Real-time synchronizer is notified, rendering artwork on discovery feeds.",
+                                                fontSize = 11.sp, lineHeight = 16.sp)
+                                        }
+                                    }
+                                    "Schema" -> {
+                                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            Text("Firebase Database Nodes Configuration", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+                                            SelectionContainer {
+                                                Text(
+                                                    text = "{\n" +
+                                                            "  \"artworks\": {\n" +
+                                                            "    \"art_id_0\": {\n" +
+                                                            "      \"id\": \"art_id_0\",\n" +
+                                                            "      \"title\": \"Aetherial Blueprints\",\n" +
+                                                            "      \"imageUrl\": \"https://roqcztwhwonmfwbhwkuk.supabase.co/storage/v1/object/public/art-images-bucket/...\",\n" +
+                                                            "      \"priceUsd\": 1250,\n" +
+                                                            "      \"artistId\": \"artist_990\"\n" +
+                                                            "    }\n" +
+                                                            "  }\n" +
+                                                            "}",
+                                                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                                                    fontSize = 10.sp,
+                                                    lineHeight = 14.sp
+                                                )
+                                            }
+                                        }
+                                    }
+                                    "UI code" -> {
+                                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            Text("Jetpack Compose Pinterest Masonry Grid Code Slice", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+                                            SelectionContainer {
+                                                Text(
+                                                    text = "@OptIn(ExperimentalFoundationApi::class)\n" +
+                                                            "@Composable\n" +
+                                                            "fun PinterestMasonryGrid(\n" +
+                                                            "    artworks: List<Artwork>,\n" +
+                                                            "    onItemClick: (String) -> Unit\n" +
+                                                            ") {\n" +
+                                                            "    LazyVerticalStaggeredGrid(\n" +
+                                                            "        columns = StaggeredGridCells.Fixed(2),\n" +
+                                                            "        modifier = Modifier.fillMaxWidth(),\n" +
+                                                            "        horizontalArrangement = Arrangement.spacedBy(8.dp),\n" +
+                                                            "        verticalItemSpacing = 8.dp\n" +
+                                                            "    ) {\n" +
+                                                            "        items(artworks) { artwork ->\n" +
+                                                            "            Column(modifier = Modifier.clickable { onItemClick(artwork.id) }) {\n" +
+                                                            "                AsyncImage(model = artwork.imageUrl, contentScale = ContentScale.Crop)\n" +
+                                                            "                Text(text = artwork.title, fontWeight = FontWeight.Bold)\n" +
+                                                            "            }\n" +
+                                                            "        }\n" +
+                                                            "    }\n" +
+                                                            "}",
+                                                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                                                    fontSize = 10.sp,
+                                                    lineHeight = 14.sp
+                                                )
+                                            }
+                                        }
+                                    }
+                                    "API code" -> {
+                                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            Text("Retrofit Multi-Platform Pipeline Sync", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+                                            SelectionContainer {
+                                                Text(
+                                                    text = "interface SupabaseStorageApi {\n" +
+                                                            "    @Multipart\n" +
+                                                            "    @POST(\"storage/v1/object/art-images-bucket/{fileName}\")\n" +
+                                                            "    suspend fun uploadProductImage(\n" +
+                                                            "        @Header(\"Authorization\") token: String,\n" +
+                                                            "        @Path(\"fileName\") name: String,\n" +
+                                                            "        @Part body: MultipartBody.Part\n" +
+                                                            "    ): UploadResponse\n" +
+                                                            "}",
+                                                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                                                    fontSize = 10.sp,
+                                                    lineHeight = 14.sp
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
