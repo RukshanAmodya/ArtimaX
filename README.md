@@ -5,11 +5,6 @@ Welcome to my project releases repository! Here you will find the stable version
 ## 🚀 Projects
 Below is a list of the projects hosted in this repository:
 
-| Project Name | Description | Link |
-| :--- | :--- | :--- |
-| **Project Name 1** | A brief one-line description of what this project does. | [View Project](#) |
-| **Project Name 2** | A brief one-line description of what this project does. | [View Project](#) |
-
 ## 🛠 How to Use
 - **Binaries:** You can download the latest compiled binaries from the [Releases](https://github.com/RukshanAmodya/Releases/releases) section.
 - **Source Code:** Each project has a link to its dedicated source repository where you can contribute or report issues.
